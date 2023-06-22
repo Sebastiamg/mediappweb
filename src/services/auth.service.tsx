@@ -1,43 +1,29 @@
 import axios from 'axios'
-import { Pokemon, Species } from '../interfaces/pokemon.interface';
+import { User } from '../interfaces';
+
+const BASE_URL = 'http://localhost:3000/api/v1';
 
 const apiClient = axios.create({
-  baseURL: 'https://pokeapi.co/api/v2'
+  baseURL: BASE_URL,
 })
 
-const pokemonPrefix = '/pokemon';
+const loginPrefix = 'auth/login';
+const registerPrefix = 'auth/register';
 
-async function getPokemons(): Promise<Species[]> {
-  const res = await apiClient.get(pokemonPrefix)
-  // console.log(res.data.results);
-  return res.data.results
-}
-
-async function getOne(id: number): Promise<Pokemon> {
-  const res = await apiClient.get(pokemonPrefix.concat(`/${id}`))
-  // console.log(res.data)
+async function LogIn(credentials: Pick<User, 'email' | 'password'>) {
+  const res = await apiClient.post(loginPrefix, credentials)
   return res.data
 }
 
-async function postPokemon(pokemon: Pokemon): Promise<Pokemon> {
-  const res = await apiClient.post<Pokemon>(pokemonPrefix, pokemon)
-  console.log(res.data)
-  return res.data
+async function SingIn(credentials: User) {
+  const res = await apiClient.post(registerPrefix, credentials)
+  return res.data;
 }
 
-async function updatePokemon(id: number, pokemon: Pokemon) {
-  const res = await apiClient.put<Pokemon>(pokemonPrefix.concat(`/${id}`), pokemon)
-  console.log(res.data)
-  return res.data
-}
-
-async function deletePokemon(id: number): Promise<Pokemon> {
-  const res = await apiClient.delete(pokemonPrefix.concat(`/${id}`))
-  console.log(res)
+async function getUsers() {
+  const res = await axios.get('http://localhost:3000/api/v1/users')
   return res.data
 }
 
 
-
-export { getPokemons, getOne, postPokemon, updatePokemon, deletePokemon }
-
+export { LogIn, getUsers, SingIn }
