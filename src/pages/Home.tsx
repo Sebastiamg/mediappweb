@@ -1,5 +1,11 @@
+
 export default function Home() {
+
+  // const { isAuthenticated, user } = getAuthData();
+
   return (
-    <div>Home</div>
+    <div>
+      <h1>abajo</h1>
+    </div>
   )
 }
