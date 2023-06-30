@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { User } from '../interfaces';
+import { Medic, User } from '../interfaces';
 import { AppointmentInterface } from '../interfaces/appointment.interface';
 
 const BASE_URL = 'http://localhost:3000/api/v1';
@@ -24,8 +24,14 @@ async function SingIn(credentials: User) {
   return res;
 }
 
-async function editProfile(id: string, user: User) {
-  const res = await apiClient.patch(userPrefix.concat(`/${id}`), user)
+async function editProfile(id: string, user: User, role?: string) {
+  let res;
+  if (role === 'medic') {
+    console.log(id)
+    res = await apiClient.patch(medicPrefix.concat(`patch/${id}`), user)
+  } else {
+    res = await apiClient.patch(userPrefix.concat(`/${id}`), user)
+  }
   return res
 }
 
@@ -44,5 +50,15 @@ async function generateAppointment(appointmentData: AppointmentInterface) {
   return res
 }
 
+async function createMedic(medicData: Medic) {
+  const res = await apiClient.post(medicPrefix.concat('post'), medicData)
+  return res
+}
 
-export { LogIn, getUsers, SingIn, editProfile, getMedics, generateAppointment }
+async function removeMedic(id: string) {
+  const res = await apiClient.delete(medicPrefix.concat(`delete/${id}`))
+  return res
+}
+
+
+export { LogIn, getUsers, SingIn, editProfile, getMedics, generateAppointment, createMedic, removeMedic }

@@ -6,14 +6,13 @@ import { editProfile } from "../../services/auth.service";
 export default function Profile() {
   const [disabledInput, setDisabledInput] = useState(true)
 
-  const [{ email, firstname, id, idCard, lastname, phone, password }, setUserAuthInfo] = useState(plainUserAuthData)
+  const [{ email, firstname, id, idCard, lastname, phone, password, role }, setUserAuthInfo] = useState(plainUserAuthData)
 
   useEffect(() => {
     setUserAuthInfo(getStoragePlainData())
   }, []);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.value)
     setUserAuthInfo(userValues => ({
       ...userValues,
       [e.target.name]: e.target.value
@@ -24,20 +23,23 @@ export default function Profile() {
 
   function saveOrDiscardChanges() {
     setDisabledInput(true)
-    const user = transformUserAuthData({ email, id, firstname, idCard, lastname, phone, password })
+    const user = transformUserAuthData({ email, id, firstname, idCard, lastname, phone, password, role })
 
-    editProfile(id as string, user[1]).then(res => {
+    editProfile(id as string, user[1], role).then(res => {
       console.log(res.data)
       setStorage(user[0])
       window.location.reload()
-    }).catch(err => console.log(err.response.data))
+    }).catch(err => {
+      console.log(err.response.data)
+      alert(err.response.data.message)
+    })
     return true
   }
 
 
   return (
     <>
-      <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="max-w-md mx-auto mt-10 bg-white shadow-lg shadow-gray-400 rounded-lg overflow-hidden">
         <div className="text-2xl py-4 px-6 bg-gray-900 text-white text-center font-bold uppercase">
           Profile
         </div>

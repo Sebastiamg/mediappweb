@@ -1,6 +1,6 @@
-import { User } from "../interfaces";
+import { Medic, User } from "../interfaces";
 import { AuthUserData } from "../interfaces/context.interface";
-import { plainUserAuthData } from "./constants";
+import { plainMedicData, plainUserAuthData } from "./constants";
 
 const defaultUserData: User = {
   firstname: "",
@@ -57,32 +57,36 @@ export function getStoragePlainData(): typeof plainUserAuthData {
     lastname: data.profile?.lastname as string,
     password: data.password,
     phone: data.profile?.phone as number,
+    role: data.role?.name as string
   }
 }
 
-export function transformUserAuthData(userData: typeof plainUserAuthData): [User, Omit<User, 'id'>] {
-  const { email, firstname, id, idCard, lastname, password, phone } = userData;
+export function transformUserAuthData(userData: typeof plainUserAuthData, isMedic = false): [User, Omit<User, 'id'>] {
+  const { email, firstname, id, idCard, lastname, password, phone, role } = userData;
+
+  const DATA: User = {
+    firstname,
+    email,
+    password,
+    profile: {
+      idCard: Number(idCard),
+      lastname,
+      phone: Number(phone)
+    },
+    role: {
+      name: role
+    }
+  }
+
+  if (isMedic) (DATA as Medic).speciality = (userData as typeof plainMedicData).speciality;
+
   return [
     {
+      ...DATA,
       id,
-      firstname,
-      email,
-      password,
-      profile: {
-        idCard: Number(idCard) || 1,
-        lastname,
-        phone: Number(phone) || 1
-      }
     },
     {
-      firstname,
-      email,
-      password,
-      profile: {
-        idCard: Number(idCard) || 1,
-        lastname,
-        phone: Number(phone) || 1
-      }
+      ...DATA
     }
   ]
 }

@@ -26,8 +26,6 @@ export default function Appointment() {
   }, [])
 
   useEffect(() => {
-    console.log(medic)
-    // bg - gray - 900
     const btn = sendBtnRef.current as HTMLButtonElement
     if ((date.length && hour.length && medic.length) <= 1) {
       btn.disabled = true;
@@ -57,6 +55,7 @@ export default function Appointment() {
       console.log(res.data)
     }).catch(err => {
       console.log(err.response.data)
+      alert(err.response.data.message)
     })
   }
 
@@ -64,7 +63,7 @@ export default function Appointment() {
 
   return (
     <div>
-      <div className="max-w-md mx-10 mt-10 bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="max-w-md mx-10 mt-10 bg-white shadow-lg shadow-gray-400 rounded-lg overflow-hidden">
         <div className="text-2xl py-4 px-6 bg-gray-900 text-white text-center font-bold uppercase">
           Medic Appointment
         </div>

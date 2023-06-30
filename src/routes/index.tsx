@@ -2,9 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 import Layout from "../layout/Layout";
 
-import { ErrorPage, Login, Home, Register } from "../pages/";
-import Profile from "../pages/user/Profile";
-import Appointment from "../pages/Appointment";
+import { ErrorPage, Login, Home, Register, Profile, Appointment, CreateMedic } from "../pages/";
 
 export const routes = createBrowserRouter([
   {
@@ -32,6 +30,10 @@ export const routes = createBrowserRouter([
         element: <Appointment />
       },
       // Auth routes
+      {
+        path: '/medic/create',
+        element: <CreateMedic />
+      },
       {
         path: '/auth',
         children: [

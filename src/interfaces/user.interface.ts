@@ -8,5 +8,4 @@ export interface User {
   password: string;
   profile?: Profile;
   role?: Role;
-  speciality?: string;
 }
