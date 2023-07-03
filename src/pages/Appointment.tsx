@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { generateAppointment, getMedics } from "../services/auth.service";
+import { generateAppointment, getMedics, getUser } from "../services/auth.service";
 import { User } from "../interfaces";
 import { AppointmentInterface } from "../interfaces/appointment.interface";
 import { getStoragePlainData } from "../common/storage";
@@ -11,6 +11,8 @@ export default function Appointment() {
 
   const [medics, setMedics] = useState<{ name: string, id: string }[]>([])
 
+  type AppointmenData = Omit<AppointmentInterface, 'user' | 'medic'>[]
+  const [userAppointmentList, setUserAppointmenList] = useState<AppointmenData>([])
 
 
   const sendBtnRef = useRef<HTMLButtonElement>(null)
@@ -39,6 +41,25 @@ export default function Appointment() {
     return
   }, [date, hour, medic])
 
+  // appointment list
+  useEffect(() => {
+    getAppointments();
+  }, [])
+
+  function getAppointments() {
+    const userId = getStoragePlainData().id;
+    getUser(userId).then(res => {
+      const appointments: AppointmenData = [];
+      (res as AppointmenData).forEach(appointment => {
+        appointments.push(appointment)
+      })
+
+      setUserAppointmenList(appointments)
+    }).catch(err => {
+      console.log(err.response.data)
+    });
+  }
+
   function createAppointment() {
     const userId = getStoragePlainData().id;
 
@@ -47,12 +68,13 @@ export default function Appointment() {
       date,
       medic,
       user: userId,
-      status: "false"
+      status: "pending"
     };
     console.log(appoitment)
     if ((date.length && hour.length && medic.length) <= 1) return
     generateAppointment(appoitment).then(res => {
       console.log(res.data)
+      return getAppointments();
     }).catch(err => {
       console.log(err.response.data)
       alert(err.response.data.message)
@@ -62,8 +84,8 @@ export default function Appointment() {
 
 
   return (
-    <div>
-      <div className="max-w-md mx-10 mt-10 bg-white shadow-lg shadow-gray-400 rounded-lg overflow-hidden">
+    <div className="flex justify-evenly">
+      <div className="w-2/5 max-w-md mx-10 mt-10 bg-white shadow-lg shadow-gray-400 rounded-lg overflow-hidden">
         <div className="text-2xl py-4 px-6 bg-gray-900 text-white text-center font-bold uppercase">
           Medic Appointment
         </div>
@@ -93,7 +115,7 @@ export default function Appointment() {
 
           <div className="mb-4">
             <label className="block text-gray-700 font-bold mb-2" htmlFor="medic">
-              Service
+              Medic
             </label>
             <select
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -121,6 +143,28 @@ export default function Appointment() {
           </div>
 
         </section>
+      </div>
+      <div className="w-4/5 max-w-md mx-10 mt-10 bg-white shadow-lg shadow-gray-400 rounded-lg overflow-hidden">
+        <div className="text-2xl py-4 px-6 bg-gray-900 text-white text-center font-bold uppercase">
+          Appointmen List
+        </div>
+        <ul className="py-4 px-6 h-96 overflow-auto">
+          {
+            userAppointmentList.map((appointmentData, idx) => (
+              <li key={idx} className="w-full flex justify-between bg-gray-200 shadow-gray-400 rounded-lg mb-3">
+                <section className="w-4/5 p-2">
+                  <h1><span className="font-bold">Hour: </span>{appointmentData.hour}</h1>
+                  <h1><span className="font-bold">Date: </span>{(new Date(appointmentData.date).toDateString())}</h1>
+                  <h1><span className="font-bold">Status: </span>{appointmentData.status}</h1>
+                </section>
+                <section className="w-1/12 flex justify-end bg-red-900 rounded-r-md">
+                  <button className="h-full w-full">
+                  </button>
+                </section>
+              </li>
+            ))
+          }
+        </ul>
       </div>
     </div>
   )

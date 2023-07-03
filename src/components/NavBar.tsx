@@ -24,6 +24,12 @@ export default function NavBar() {
             <Link to={'/'} className="flex items-center">
               <img src={logo} className="h-6 mr-3 sm:h-9" alt="Landwind Logo" />
               <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Medi App</span>
+              {
+                data.user &&
+                (
+                  <span className="text-slate-500 ml-1 uppercase text-sm"> | {data.user.role?.name}</span>
+                )
+              }
             </Link>
             <div className="flex items-center lg:order-2">
               <div className="hidden mt-2 mr-4 sm:inline-block">
@@ -71,24 +77,27 @@ export default function NavBar() {
                 </li>
 
                 {
-                  data.user.role?.name === 'admin' ?
-                    (
-                      <li>
-                        <Link to={'/medic/create'}
-                          className="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">
-                          Create Medic
-                        </Link>
-                      </li>
-                    )
-                    :
-                    (
-                      <li>
-                        <Link to={'/appointment'}
-                          className="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">
-                          Medic Appointment
-                        </Link>
-                      </li>
-                    )
+                  data.user &&
+                  (
+                    data.user.role?.name === 'admin' ?
+                      (
+                        <li>
+                          <Link to={'/medic/create'}
+                            className="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">
+                            Create Medic
+                          </Link>
+                        </li>
+                      )
+                      :
+                      (
+                        <li>
+                          <Link to={'/appointment'}
+                            className="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">
+                            Medic Appointment
+                          </Link>
+                        </li>
+                      )
+                  )
                 }
               </ul>
             </div>

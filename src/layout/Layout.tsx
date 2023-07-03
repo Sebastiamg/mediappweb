@@ -4,6 +4,7 @@ import NavBar from "../components/NavBar";
 import { useEffect, useState } from "react";
 import { getStorageData } from "../common/storage";
 import { AuthUserData } from "../interfaces/context.interface";
+import Footer from "../components/Footer";
 
 export default function Layout() {
 
@@ -20,7 +21,7 @@ export default function Layout() {
       <main>
         <Outlet />
       </main>
-      {/* {!window.location.toString().includes('login' || 'register') ? <NavBar /> : null} */}
+      {!window.location.toString().includes('login' || 'register') ? <Footer /> : null}
     </div>
   )
 }

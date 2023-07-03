@@ -14,6 +14,7 @@ const userPrefix = '/user'
 const medicPrefix = userPrefix.concat('/medic/')
 const appointmentPrefix = 'appointment'
 
+// AUTH
 async function LogIn(credentials: Pick<User, 'email' | 'password'>) {
   const res = apiClient.post(loginPrefix, credentials)
   return res
@@ -24,6 +25,7 @@ async function SingIn(credentials: User) {
   return res;
 }
 
+// USER
 async function editProfile(id: string, user: User, role?: string) {
   let res;
   if (role === 'medic') {
@@ -40,13 +42,15 @@ async function getUsers() {
   return res.data
 }
 
-async function getMedics() {
-  const res = await apiClient.get(medicPrefix.concat('get'));
-  return res
+async function getUser(userId: string) {
+  const res = await apiClient(userPrefix.concat(`/${userId}`))
+
+  return res.data.appointment;
 }
 
-async function generateAppointment(appointmentData: AppointmentInterface) {
-  const res = apiClient.post<AppointmentInterface>(appointmentPrefix, appointmentData)
+// MEDIC
+async function getMedics() {
+  const res = await apiClient.get(medicPrefix.concat('get'));
   return res
 }
 
@@ -61,4 +65,12 @@ async function removeMedic(id: string) {
 }
 
 
-export { LogIn, getUsers, SingIn, editProfile, getMedics, generateAppointment, createMedic, removeMedic }
+// APOINTMENT
+async function generateAppointment(appointmentData: AppointmentInterface) {
+  const res = apiClient.post<AppointmentInterface>(appointmentPrefix, appointmentData)
+  return res
+}
+
+
+
+export { LogIn, getUsers, getUser, SingIn, editProfile, getMedics, generateAppointment, createMedic, removeMedic }
