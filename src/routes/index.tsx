@@ -2,11 +2,20 @@ import { createBrowserRouter } from "react-router-dom";
 
 import Layout from "../layout/Layout";
 
-import { ErrorPage, Login, Home, Register, Profile, Appointment, CreateMedic } from "../pages/";
+import {
+  ErrorPage,
+  Login,
+  Home,
+  Register,
+  Profile,
+  Appointment,
+  CreateMedic,
+} from "../pages/";
+import GestionAppointment from "../pages/appointment/gestionAppointment";
 
 export const routes = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
@@ -15,40 +24,44 @@ export const routes = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: '/user',
+        path: "/user",
         children: [
           {
-            path: '/user/profile',
-            element: <Profile />
-          }
-        ]
+            path: "/user/profile",
+            element: <Profile />,
+          },
+        ],
       },
 
       // appointment
       {
-        path: '/appointment',
-        element: <Appointment />
+        path: "/appointment",
+        element: <Appointment />,
+      },
+      // gestion appointment
+      {
+        path: "/appointment/gestion",
+        element: <GestionAppointment />,
       },
       // Auth routes
       {
-        path: '/medic/create',
-        element: <CreateMedic />
+        path: "/medic/create",
+        element: <CreateMedic />,
       },
       {
-        path: '/auth',
+        path: "/auth",
         children: [
           {
             index: true,
-            path: '/auth/login',
+            path: "/auth/login",
             element: <Login />,
           },
           {
-            path: '/auth/register',
+            path: "/auth/register",
             element: <Register />,
-          }
-        ]
-
+          },
+        ],
       },
     ],
   },
-],)
+]);

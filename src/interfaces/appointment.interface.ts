@@ -5,6 +5,7 @@ export interface AppointmentInterface {
 
   medic: string;
   status: string;
+  id?: number;
 }
 
 export type AppointmenData = Omit<AppointmentInterface, "user" | "medic">[];

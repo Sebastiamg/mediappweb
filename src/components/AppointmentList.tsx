@@ -1,30 +1,56 @@
-import { useEffect, useState } from "react"
-import { getUser } from "../services/auth.service";
-import { getStoragePlainData } from "../common/storage";
+import { useEffect, useState } from "react";
+import { getMedic, getUser } from "../services/auth.service";
+import { getStorageData, getStoragePlainData } from "../common/storage";
 import { AppointmenData } from "../interfaces/appointment.interface";
 import FilterAppointmentList from "./FilterAppointmentList";
-
+import { defaultUserAuthData } from "../common/constants";
+import { AuthUserData } from "../interfaces";
 
 export default function AppointmentList() {
-  const [userAppointmentList, setUserAppointmenList] = useState<AppointmenData>([]);
+  const [userAppointmentList, setUserAppointmenList] = useState<AppointmenData>(
+    []
+  );
 
+  const [data, setData] = useState<AuthUserData>(defaultUserAuthData);
 
   useEffect(() => {
-    getAppointments()
-  }, [])
+    getAppointments();
+  }, []);
+
+  useEffect(() => {
+    const data = getStorageData();
+    setData(data);
+  }, []);
 
   function getAppointments() {
     const userId = getStoragePlainData().id;
-    getUser(userId).then(res => {
-      const appointments: AppointmenData = [];
-      (res as AppointmenData).forEach(appointment => {
-        appointments.push(appointment)
-      })
+    if (data.user.role?.name === "pacient") {
+      getUser(userId)
+        .then((res) => {
+          const appointments: AppointmenData = [];
+          (res as AppointmenData).forEach((appointment) => {
+            appointments.push(appointment);
+          });
 
-      setUserAppointmenList(appointments)
-    }).catch(err => {
-      console.log(err.response.data)
-    });
+          setUserAppointmenList(appointments);
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+    } else {
+      getMedic(userId)
+        .then((res) => {
+          const appointments: AppointmenData = [];
+          (res as AppointmenData).forEach((appointment) => {
+            appointments.push(appointment);
+          });
+
+          setUserAppointmenList(appointments);
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+    }
   }
 
   return (
@@ -43,7 +69,6 @@ export default function AppointmentList() {
         appointmentList={userAppointmentList}
         filterOption="lost"
       />
-
     </section>
-  )
+  );
 }
