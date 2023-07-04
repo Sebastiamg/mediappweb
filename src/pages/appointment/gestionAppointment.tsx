@@ -33,12 +33,15 @@ export default function GestionAppointment() {
 
   return (
     <>
-      <ul className="w-2/6 mx-auto shadow-md shadow-gray-400 p-5 m-16">
+      <ul className="w-2/6 mx-auto shadow-md shadow-gray-400 m-16 pb-1">
+        <div className="text-2xl py-4 px-6 bg-gray-900 text-white text-center font-bold uppercase">
+          Manage my Medical Appointments
+        </div>
         {appointments &&
           appointments.map((appointment) => (
             <li
               key={appointment.date}
-              className="w-full flex justify-between bg-gray-200 shadow-gray-400 rounded-lg my-4"
+              className="w-11/12 flex justify-between mx-auto bg-gray-200 shadow-gray-400 rounded-lg my-5"
             >
               <section className="w-4/5 p-2">
                 <h1>
